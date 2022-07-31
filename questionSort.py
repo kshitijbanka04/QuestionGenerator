@@ -62,7 +62,6 @@ def storeSolutionList(levelBank, i, sum, listOfSolution, difficulty):
         
 
 def findSets(levelMarks, levelBank, difficulty):
-    #TODO: Find all subsequences with sum equals to levelMarks
     n = len(levelBank)
     if(n==0 or levelMarks<0):
         return "Error"
