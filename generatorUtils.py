@@ -36,18 +36,6 @@ def storeList(difficultyList, filename):
         json.dump(jsonList, cachedfile)
 
 def generateQuestionPaperUtil(optionList):
-    # easyList = convertToListofList(optionList["Easy"])
-    # medList = convertToListofList(optionList["Medium"])
-    # hardList = convertToListofList(optionList["Hard"])
-    
-    # storeList(easyList, "Easy.json")
-    # storeList(medList, "Med.json")
-    # storeList(hardList, "Hard.json")
-    
-    # easySet = randomPickUtil(easyList)
-    # medSet = randomPickUtil(medList)
-    # hardSet = randomPickUtil(hardList)
-
     if(isinstance(optionList["Easy"][0][0], str)):
         randomVal = randrange(len(optionList["Easy"]))
         easySet = optionList["Easy"][randomVal]
