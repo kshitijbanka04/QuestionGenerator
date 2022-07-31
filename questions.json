@@ -30,7 +30,7 @@
         "Marks": 2
     },
     {
-        "question_id": "Q6",
+        "question_id": "Q12",
         "Difficulty": "Easy",
         "Marks": 2
     },
@@ -58,5 +58,10 @@
         "question_id": "Q10",
         "Difficulty": "Hard",
         "Marks": 9
+    },
+    {
+        "question_id": "Q13",
+        "Difficulty": "Medium",
+        "Marks": 3
     }
 ]

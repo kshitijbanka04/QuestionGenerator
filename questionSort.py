@@ -1,4 +1,6 @@
 import json
+from os import path
+from random import randrange
 from generatorUtils import *
 
 file = open("questions.json")
@@ -6,6 +8,7 @@ data = json.load(file)
 file.close()
 questionBank = dict()
 dp = [[]]
+difficulty = ["Easy", "Medium", "Hard"]
     
     #NEED To write logger function
 
@@ -42,7 +45,7 @@ def appendToExhaustiveList(listOfSolution, difficulty):
 def storeSolutionList(levelBank, i, sum, listOfSolution, difficulty):
     #We traverse back from last index to first and this is the edge case
     if(i == 0 and sum !=0 and dp[0][sum]):
-        listOfSolution.append(levelBank[i]["questionId"])
+        listOfSolution.append(levelBank[i])
         appendToExhaustiveList(listOfSolution, difficulty)
         listOfSolution = []
         return
@@ -57,7 +60,7 @@ def storeSolutionList(levelBank, i, sum, listOfSolution, difficulty):
         storeSolutionList(levelBank, i-1, sum, tempList, difficulty)
 
     if(sum>=levelBank[i]["marks"] and dp[i-1][sum-levelBank[i]["marks"]]):
-        listOfSolution.append(levelBank[i]["questionId"])
+        listOfSolution.append(levelBank[i])
         storeSolutionList(levelBank, i-1, sum-levelBank[i]["marks"], listOfSolution, difficulty)
         
 
@@ -80,9 +83,7 @@ def findSets(levelMarks, levelBank, difficulty):
             else:
                 dp[i][j] = dp[i-1][j]
     if(dp[n-1][levelMarks]==False):
-        print("No questions sum upto the given requirement")
-        #TODO: Error Handling
-        return
+        raise Exception("No questions sum upto the given requirement")
     listOfSolution = []
     storeSolutionList(levelBank, n-1, levelMarks, listOfSolution, difficulty)
 
@@ -113,28 +114,63 @@ def preprocess():
         
     return easySum, medSum, hardSum
 
-def paperGenerator(easy, med, hard):
-    # Write the DP problem here but a bit modified according to the value
-    listOfEasySet = findSets(easy, questionBank["Easy"], "Easy")
-    listOfMedSet = findSets(med, questionBank["Medium"], "Medium")
-    listOfHardSet = findSets(hard, questionBank["Hard"], "Hard")
 
 # Need to write the CLI arguments for the smooth running
+def searchList(cachedList, marks, difficulty):
+    for i in range(len(cachedList)):
+        if(cachedList[i]["marks"]==marks):
+            possible_solution[difficulty] = cachedList[i]["questionId"]
+            return True
+            #TODO Select amonsgt the list of lists in random
+        else:
+            findSets(marks, questionBank[difficulty], difficulty)
+            return False
+             
+        
 def main():
     totalMarks = input("Enter the total marks:")
     easyPerc = input("Enter percentage of marks allotted to easy level questions:")
     medPerc = input("Enter percentage of marks allotted to medium level questions:")
     hardPerc = input("Enter percentage of marks allotted to hard level questions:")
     
-    easyMarks, medMarks, hardMarks = conversionUtil(int(totalMarks), easyPerc, medPerc, hardPerc)
-    print(easyMarks, medMarks, hardMarks)
+    try:
+        easyMarks, medMarks, hardMarks = conversionUtil(int(totalMarks), easyPerc, medPerc, hardPerc)
+        print(easyMarks, medMarks, hardMarks)
+    except Exception as e:
+        print(e)
+        return
     
     easySum, medSum, hardSum = preprocess()
     if(easySum<int(easyMarks) or medSum<int(medMarks) or hardSum<int(hardMarks)):
         print("Please pass in valid inputs, the previous inputs are more than the marks present in the Question Bank")
+        return
     else:
-        paperGenerator(int(easyMarks), int(medMarks), int(hardMarks))
+        try:
+            if(path.exists("Easy.json") and path.exists("Med.json") and path.exists("Hard.json")):
+                #TODO: Make use of LRU CACHE and also find If not found we need to go the other way round bby finding the complete solution
+                file = open("Easy.json")
+                easyCachedList = json.load(file)
+                file.close()
+                file = open("Med.json")
+                medCachedList = json.load(file)
+                file.close
+                file = open("Hard.json")
+                hardCachedList = json.load(file)
+                file.close
+                searchList(easyCachedList, int(easyMarks), "Easy")
+                searchList(medCachedList, int(medMarks), "Medium")
+                searchList(hardCachedList, int(hardMarks), "Hard")
+                generateQuestionPaperUtil(possible_solution)
+            else:
+                #This would just run in the first case as we wont be having any cached data
+                findSets(int(easyMarks), questionBank["Easy"], "Easy")
+                findSets(int(medMarks), questionBank["Medium"], "Medium")
+                findSets(int(hardMarks), questionBank["Hard"], "Hard")
+                generateQuestionPaperUtil(possible_solution)
+                
+        except Exception as e:
+            print(e)
+            return
     # print(possible_solution)
-    questionPaper = list()
-    generateQuestionPaperUtil(possible_solution)
+    
 main()
