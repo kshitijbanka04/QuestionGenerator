@@ -134,6 +134,7 @@ def main():
     hardPerc = input("Enter percentage of marks allotted to hard level questions:")
     
     try:
+        #Used to convert percentages into actual marks and if they turnout to be fractional it raises an error
         easyMarks, medMarks, hardMarks = conversionUtil(int(totalMarks), easyPerc, medPerc, hardPerc)
         print(easyMarks, medMarks, hardMarks)
     except Exception as e:
@@ -157,6 +158,7 @@ def main():
                 file = open("Hard.json")
                 hardCachedList = json.load(file)
                 file.close
+                #Will try to first find the asked marks in the json file content we have if we dont find any we findSets
                 searchList(easyCachedList, int(easyMarks), "Easy")
                 searchList(medCachedList, int(medMarks), "Medium")
                 searchList(hardCachedList, int(hardMarks), "Hard")
@@ -170,7 +172,6 @@ def main():
                 
         except Exception as e:
             print(e)
-            return
     # print(possible_solution)
     
 main()

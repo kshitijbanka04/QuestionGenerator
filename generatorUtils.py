@@ -6,6 +6,7 @@ from random import randrange
 from typing import final
 import numpy as np
 
+#Method to convert from percentage to marks
 def conversionUtil(totalMarks, easyPerc, medPerc, hardPerc):
     fEasyMarks, intEasyMarks = math.modf((int(easyPerc) * totalMarks)/100)
     fMedMarks,intMedMarks = math.modf((int(medPerc) * totalMarks)/100)
@@ -14,11 +15,13 @@ def conversionUtil(totalMarks, easyPerc, medPerc, hardPerc):
         return intEasyMarks, intMedMarks, intHardMarks
     else:
         raise Exception("Please enter percentages such that the mark distribution is in integers")
-        
+      
+#Method to pick random list from a list of lists  
 def randomPickUtil(optionList):
     randomVal = randrange(len(optionList))
     return(optionList[randomVal]["questionId"])
 
+#Method to store back the value in json 
 def storeList(difficultyList, filename):
     jsonList = list()
     jsonDict = dict()
@@ -35,6 +38,7 @@ def storeList(difficultyList, filename):
     with open(filename, "w") as cachedfile:
         json.dump(jsonList, cachedfile)
 
+#Method generates the question paper
 def generateQuestionPaperUtil(optionList):
     if(isinstance(optionList["Easy"][0][0], str)):
         randomVal = randrange(len(optionList["Easy"]))
@@ -61,7 +65,7 @@ def generateQuestionPaperUtil(optionList):
     random.shuffle(questionPaper)
     print("Question paper is :", questionPaper)
         
-    
+#Util function to convert into specific input  
 def convertToListofList(difficultyList):
     finalList = list()
     for i in range(len(difficultyList)):
